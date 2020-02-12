@@ -1,0 +1,335 @@
+.stokr-manager {
+  position: relative;
+  width: 100%;
+  height: 600px;
+  border-radius: 5px;
+  background-color: #fff;
+  overflow: hidden;
+
+  .stokr-manager-inner {
+    position: relative;
+    top: 0;
+    height: 200%;
+    transition: all 0.25s linear;
+
+    .stokr-manager-main {
+      display: flex;
+      flex-direction: column;
+      height: 50%;
+
+      .stokr-manager-header {
+        border-bottom: 1px solid#e5e5e5;
+        transition: all 0.25s ease-in-out;
+
+        .header-top {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          height: 128px;
+          border-bottom: 1px solid #e5e5e5;
+          padding-left: 30px;
+          padding-right: 30px;
+
+          .header-column {
+            .stokr-title {
+              font-size: 39px;
+              font-weight: bold;
+              color: #41bf15;
+            }
+
+            .actions {
+              display: flex;
+              align-items: center;
+
+              &__search {
+                height: 40px;
+                margin-right: 20px;
+                border-radius: 50px;
+                border: 1px solid #eee;
+              }
+
+              &__icon {
+                width: 40px;
+                height: 40px;
+                border: none;
+                padding: 0;
+
+                &:hover {
+                  cursor: pointer;
+                }
+
+                &:not(:last-child) {
+                  margin-right: 20px;
+                }
+              }
+            }
+          }
+        }
+
+        .header-dropdown {
+          height: 0;
+          padding: 0 30px;
+          overflow: hidden;
+          transition: all 0.25s linear;
+
+          &--expanded {
+            padding: 15px 30px;
+            height: auto;
+          }
+
+          .filter-form {
+            display: flex;
+            align-items: center;
+
+            &__column {
+              margin-right: 30px;
+
+              .form-item {
+                display: flex;
+                align-items: center;
+
+                &:not(:last-child) {
+                  margin-bottom: 25px;
+                }
+
+                &__key {
+                  font-size: 26px;
+                  color: #59737c;
+                  width: 200px;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  white-space: nowrap;
+                  margin-right: 5px;
+                }
+
+                &__value {
+                  width: 330px;
+
+                  .value-input,
+                  .value-select {
+                    width: 100%;
+                    height: 55px;
+                    border-radius: 10px;
+                    border: 1px solid #e0e0e0;
+                    background-color: #fff;
+                    box-sizing: border-box;
+                    font-size: 32px;
+                    padding: 5px 10px;
+                    color: #333;
+                  }
+                }
+              }
+
+              .apply-btn {
+                width: 120px;
+                height: 110px;
+                background-color: #41bf15;
+                font-size: 30px;
+                font-weight: bold;
+                border-radius: 50%;
+                color: #fff;
+              }
+            }
+          }
+        }
+      }
+
+      .stokr-manager-body {
+        flex-grow: 1;
+        transition: all 0.25s ease-in-out;
+
+        .company {
+          display: flex;
+          align-items: center;
+          height: 120px;
+          padding-left: 30px;
+          padding-right: 30px;
+          overflow: hidden;
+
+          &:not(:last-child) {
+            border-bottom: 1px solid #e5e5e5;
+          }
+
+          &__column {
+            &:not(:first-child) {
+              padding-left: 15px;
+            }
+
+            &:not(:last-child) {
+              padding-right: 15px;
+            }
+          }
+
+          .delete-column {
+            margin-left: -51px;
+            justify-content: center;
+            transition: all 0.25s linear;
+            opacity: 0;
+
+            &__btn {
+              border: none;
+
+              &:hover {
+                cursor: pointer;
+              }
+            }
+          }
+
+          .name-column {
+            flex-grow: 1;
+            font-size: 33px;
+            font-weight: 300;
+            color: #59737c;
+            transition: all 0.25s linear;
+
+            &__symbol {
+              margin-right: 10px;
+            }
+          }
+
+          .price-column {
+            font-size: 30px;
+            color: #59737c;
+          }
+
+          .diff-column {
+            &__btn {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-size: 34px;
+              font-weight: 300;
+              color: #fff;
+              border-radius: 10px;
+              width: 150px;
+              height: 56px;
+              border: none;
+              overflow: hidden;
+              padding-left: 5px;
+              padding-right: 5px;
+
+              &:hover {
+                cursor: pointer;
+              }
+
+              &--negative {
+                background-color: #ff4f46;
+              }
+
+              &--positive {
+                background-color: #63da39;
+              }
+            }
+          }
+
+          &--edited {
+            .delete-column {
+              opacity: 1;
+              margin-left: 0;
+            }
+          }
+        }
+      }
+    }
+
+    .stokr-manager-search {
+      display: flex;
+      flex-direction: column;
+      height: 50%;
+
+      .search-header {
+        display: flex;
+        align-items: center;
+        padding-left: 25px;
+        padding-right: 25px;
+        min-height: 128px;
+        border-bottom: 1px solid #e5e5e5;
+
+        &__autocomplete {
+          position: relative;
+          width: 100%;
+
+          .autocomplete-input {
+            width: calc(100% - 40px);
+            height: 62px;
+            border-radius: 20px;
+            border: solid 1px #408be3;
+            padding: 15px 20px;
+            font-size: 26px;
+            color: #607982;
+          }
+
+          .autocomplete-btn {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 26px;
+            color: #59737c;
+            border: none;
+
+            &:hover {
+              cursor: pointer;
+            }
+          }
+        }
+      }
+
+      .search-body {
+        flex-grow: 1;
+        padding: 30px 25px;
+        overflow: hidden;
+
+        &__empty-state {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          height: 100%;
+
+          .empty-img {
+            width: 115px;
+            height: 110px;
+            background-image: url("../../assets/images/empty-search.svg");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            margin-bottom: 40px;
+          }
+
+          .empty-text {
+            font-size: 32px;
+            color: #868686;
+          }
+        }
+
+        .suggestions {
+          &__item {
+            height: 55px;
+            font-size: 32px;
+            font-weight: 300;
+
+            &:hover {
+              cursor: pointer;
+            }
+
+            .suggestion-symbol {
+              color: #59737c;
+              margin-right: 20px;
+            }
+
+            .suggestion-name {
+              color: #1c2527;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  &--searched {
+    .stokr-manager-inner {
+      top: -100%;
+    }
+  }
+}
