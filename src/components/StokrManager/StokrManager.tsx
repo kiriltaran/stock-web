@@ -1,27 +1,25 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import classNames from "classnames";
-import { get, filter, floor, flow } from "lodash";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMinusCircle } from "@fortawesome/free-solid-svg-icons";
-import { Filters } from "./types";
+import { get, filter, flow } from "lodash";
+import { Filters, Company } from "./types";
 import "./StokrManager.scss";
 
 import { StokrManagerHeader } from "./StokrManagerHeader";
+import { StokrManagerCompany } from "./StokrManagerCompany";
 
 const StokrManager = () => {
-  const [companies, setCompanies] = useState([] as object[]);
-  const [suggestions, setSuggestions] = useState([] as object[]);
+  const [companies, setCompanies] = useState<Company[]>([]);
+  const [suggestions, setSuggestions] = useState<object[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [isPercentMode, setIsPercentMode] = useState(true);
   const [isBeingEdited, setIsBeingEdited] = useState(false);
   const [isBeingSearched, setIsBeingSearched] = useState(false);
-  // -----------------------------------------------------------
-  const [filters, setFilters] = useState({
+  const [filters, setFilters] = useState<Filters>({
     name: "",
     to: "",
     from: ""
-  } as Filters);
+  });
 
   useEffect(() => {
     defineCompanies();
@@ -35,15 +33,15 @@ const StokrManager = () => {
     // eslint-disable-next-line
   }, [searchQuery]);
 
-  const getFilteredCompanies = (): object[] => {
-    const filterByName = (fullCompanies: object[]) =>
+  const getFilteredCompanies = (): Company[] => {
+    const filterByName = (fullCompanies: Company[]) =>
       filter(fullCompanies, company =>
         get(company, "name")
           .toLowerCase()
           .includes(get(filters, "name").toLowerCase())
       );
 
-    const filterByTo = (fullCompanies: object[]) =>
+    const filterByTo = (fullCompanies: Company[]) =>
       get(filters, "to")
         ? filter(
             fullCompanies,
@@ -51,7 +49,7 @@ const StokrManager = () => {
           )
         : fullCompanies;
 
-    const filterByFrom = (fullCompanies: object[]) =>
+    const filterByFrom = (fullCompanies: Company[]) =>
       get(filters, "from")
         ? filter(
             fullCompanies,
@@ -59,6 +57,7 @@ const StokrManager = () => {
           )
         : fullCompanies;
 
+    console.log(flow([filterByName, filterByTo, filterByFrom])(companies));
     return flow([filterByName, filterByTo, filterByFrom])(companies);
   };
 
@@ -157,56 +156,14 @@ const StokrManager = () => {
           />
           <div className="stokr-manager-body">
             {getFilteredCompanies().map(company => (
-              <div
-                key={get(company, "symbol")}
-                className={classNames({
-                  company: true,
-                  "company--edited": isBeingEdited
-                })}
-              >
-                <div className="company__column delete-column">
-                  <button
-                    aria-label="delete"
-                    className="delete-column__btn"
-                    onClick={() => deleteCompany(get(company, "symbol"))}
-                  >
-                    <FontAwesomeIcon icon={faMinusCircle} size="2x" />
-                  </button>
-                </div>
-                <div className="company__column name-column">
-                  <span className="name-column__symbol">
-                    {get(company, "symbol")}
-                  </span>
-                  <span className="name-column__name">
-                    ({get(company, "name")})
-                  </span>
-                </div>
-                <div className="company__column price-column">
-                  {get(company, "price")}
-                </div>
-                <div className="company__column diff-column">
-                  <button
-                    type="button"
-                    className={classNames({
-                      "diff-column__btn": true,
-                      "diff-column__btn--positive": isPercentMode
-                        ? parseFloat(get(company, "change_percent")) > 0
-                        : get(company, "change") > 0,
-                      "diff-column__btn--negative": isPercentMode
-                        ? parseFloat(get(company, "change_percent")) < 0
-                        : get(company, "change") < 0
-                    })}
-                    onClick={() => setIsPercentMode(!isPercentMode)}
-                  >
-                    {isPercentMode
-                      ? `${floor(
-                          parseFloat(get(company, "change_percent")),
-                          2
-                        )}%`
-                      : get(company, "change")}
-                  </button>
-                </div>
-              </div>
+              <StokrManagerCompany
+                key={company.symbol}
+                company={company}
+                isEditing={isBeingEdited}
+                isPercentageDiff={isPercentMode}
+                onDiffToggle={() => setIsPercentMode(!isPercentMode)}
+                onDelete={() => deleteCompany(company.symbol)}
+              />
             ))}
           </div>
         </div>
