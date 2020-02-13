@@ -7,11 +7,10 @@ import "./StokrManager.scss";
 
 import { StokrManagerHeader } from "./StokrManagerHeader";
 import { StokrManagerCompany } from "./StokrManagerCompany";
+import { StokrManagerSearch } from "./StokrManagerSearch";
 
 const StokrManager = () => {
   const [companies, setCompanies] = useState<Company[]>([]);
-  const [suggestions, setSuggestions] = useState<object[]>([]);
-  const [searchQuery, setSearchQuery] = useState("");
   const [isPercentMode, setIsPercentMode] = useState(true);
   const [isBeingEdited, setIsBeingEdited] = useState(false);
   const [isBeingSearched, setIsBeingSearched] = useState(false);
@@ -25,13 +24,6 @@ const StokrManager = () => {
     defineCompanies();
     // eslint-disable-next-line
   }, []);
-
-  useEffect(() => {
-    if (searchQuery) {
-      defineSuggestions(searchQuery);
-    }
-    // eslint-disable-next-line
-  }, [searchQuery]);
 
   const getFilteredCompanies = (): Company[] => {
     const filterByName = (fullCompanies: Company[]) =>
@@ -71,17 +63,8 @@ const StokrManager = () => {
     return data;
   };
 
-  const fetchSuggestions = async (query: string) => {
-    const { data } = await axios.get(
-      `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${query}&apikey=DRK70Y4J0KY6JLY4`
-    );
-
-    return data;
-  };
-
   const handleSearchClose = () => {
     setIsBeingSearched(false);
-    setSearchQuery("");
   };
 
   const defineCompanies = async () => {
@@ -89,21 +72,6 @@ const StokrManager = () => {
       const companies = await fetchCompanies(["WIX"]);
 
       setCompanies(companies);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const defineSuggestions = async (query: string) => {
-    try {
-      const response = await fetchSuggestions(query);
-
-      setSuggestions(
-        filter(
-          get(response, "bestMatches", []),
-          (suggestion, index: number) => index < 6
-        )
-      );
     } catch (error) {
       console.log(error);
     }
@@ -127,7 +95,6 @@ const StokrManager = () => {
 
       setCompanies([...companies, ...company]);
       setIsBeingSearched(false);
-      setSearchQuery("");
     } catch (error) {
       console.log(error);
     }
@@ -167,50 +134,10 @@ const StokrManager = () => {
             ))}
           </div>
         </div>
-        <div className="stokr-manager-search">
-          <div className="search-header">
-            <div className="search-header__autocomplete">
-              <input
-                value={searchQuery}
-                type="text"
-                className="autocomplete-input"
-                onChange={e => setSearchQuery(e.target.value)}
-              />
-              <button
-                type="button"
-                className="autocomplete-btn"
-                onClick={handleSearchClose}
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-          <div className="search-body">
-            {searchQuery && suggestions.length ? (
-              <div className="suggestions">
-                {suggestions.map(suggestion => (
-                  <div
-                    key={get(suggestion, "1. symbol")}
-                    className="suggestions__item"
-                    onClick={() => addCompany(get(suggestion, "1. symbol"))}
-                  >
-                    <span className="suggestion-symbol">
-                      {get(suggestion, "1. symbol")}
-                    </span>
-                    <span className="suggestion-name">
-                      ({get(suggestion, "2. name")})
-                    </span>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="search-body__empty-state">
-                <div className="empty-img"></div>
-                <span className="empty-text">Search</span>
-              </div>
-            )}
-          </div>
-        </div>
+        <StokrManagerSearch
+          onSuggestionSelect={addCompany}
+          onClose={handleSearchClose}
+        />
       </div>
     </div>
   );

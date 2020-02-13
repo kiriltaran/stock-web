@@ -61,9 +61,12 @@
     .filter-form {
       display: flex;
       align-items: center;
+      justify-content: space-between;
 
       &__column {
-        margin-right: 30px;
+        &:not(:last-child) {
+          margin-right: 30px;
+        }
 
         .form-item {
           display: flex;
@@ -76,7 +79,7 @@
           &__key {
             font-size: 26px;
             color: #59737c;
-            width: 200px;
+            width: 120px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;

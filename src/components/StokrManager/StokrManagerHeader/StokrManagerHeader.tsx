@@ -105,7 +105,7 @@ const StokrManagerHeader: React.FC<StokrManagerHeaderProps> = ({
           </div>
           <div className="filter-form__column">
             <label className="form-item">
-              <span className="form-item__key">By Range: From</span>
+              <span className="form-item__key">From</span>
               <div className="form-item__value">
                 <input
                   type="text"
@@ -115,7 +115,7 @@ const StokrManagerHeader: React.FC<StokrManagerHeaderProps> = ({
               </div>
             </label>
             <label className="form-item">
-              <span className="form-item__key">By Range: To</span>
+              <span className="form-item__key">To</span>
               <div className="form-item__value">
                 <input
                   type="text"

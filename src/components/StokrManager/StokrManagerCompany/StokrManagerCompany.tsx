@@ -4,6 +4,7 @@ import { get, floor } from "lodash";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinusCircle } from "@fortawesome/free-solid-svg-icons";
 import { Company } from "../types";
+import "./StokrManagerCompany.scss";
 
 type StokrManagerCompanyProps = {
   company: Company;
