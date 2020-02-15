@@ -76,8 +76,7 @@ const StokrManagerHeader: React.FC<StokrManagerHeaderProps> = ({
         </div>
       </div>
       <div
-        className={classNames({
-          "header-dropdown": true,
+        className={classNames("header-dropdown", {
           "header-dropdown--expanded": isFilterShown
         })}
       >

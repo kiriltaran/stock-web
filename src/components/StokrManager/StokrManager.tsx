@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import classNames from "classnames";
-import { get, filter, flow } from "lodash";
+import { flow } from "lodash";
 import { Filters, Company } from "./types";
 import "./StokrManager.scss";
 
@@ -20,36 +20,36 @@ const StokrManager = () => {
     from: ""
   });
 
+  const defineCompanies = useCallback(async () => {
+    try {
+      const companies = await fetchCompanies(["WIX"]);
+
+      setCompanies(companies);
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
   useEffect(() => {
     defineCompanies();
-    // eslint-disable-next-line
-  }, []);
+  }, [defineCompanies]);
 
   const getFilteredCompanies = (): Company[] => {
     const filterByName = (fullCompanies: Company[]) =>
-      filter(fullCompanies, company =>
-        get(company, "name")
-          .toLowerCase()
-          .includes(get(filters, "name").toLowerCase())
+      fullCompanies.filter(company =>
+        company.name.toLowerCase().includes(filters.name.toLowerCase())
       );
 
     const filterByTo = (fullCompanies: Company[]) =>
-      get(filters, "to")
-        ? filter(
-            fullCompanies,
-            company => get(company, "price") <= Number(get(filters, "to"))
-          )
+      filters.to
+        ? fullCompanies.filter(company => company.price <= Number(filters.to))
         : fullCompanies;
 
     const filterByFrom = (fullCompanies: Company[]) =>
-      get(filters, "from")
-        ? filter(
-            fullCompanies,
-            company => get(company, "price") >= Number(get(filters, "from"))
-          )
+      filters.from
+        ? fullCompanies.filter(company => company.price >= Number(filters.from))
         : fullCompanies;
 
-    console.log(flow([filterByName, filterByTo, filterByFrom])(companies));
     return flow([filterByName, filterByTo, filterByFrom])(companies);
   };
 
@@ -67,19 +67,9 @@ const StokrManager = () => {
     setIsBeingSearched(false);
   };
 
-  const defineCompanies = async () => {
-    try {
-      const companies = await fetchCompanies(["WIX"]);
-
-      setCompanies(companies);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const refreshCompanies = async () => {
     try {
-      const companiesSymbols = companies.map(company => get(company, "symbol"));
+      const companiesSymbols = companies.map(company => company.symbol);
 
       const responseCompanies = await fetchCompanies(companiesSymbols);
 
@@ -101,15 +91,12 @@ const StokrManager = () => {
   };
 
   const deleteCompany = (symbol: string) => {
-    setCompanies(
-      companies.filter(company => get(company, "symbol") !== symbol)
-    );
+    setCompanies(companies.filter(company => company.symbol !== symbol));
   };
 
   return (
     <div
-      className={classNames({
-        "stokr-manager": true,
+      className={classNames("stokr-manager", {
         "stokr-manager--searched": isBeingSearched
       })}
     >
