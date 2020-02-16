@@ -1,7 +1,8 @@
 .stokr-manager-header {
-  transition: all 0.25s ease-in-out;
+  min-height: 128px;
 
   .header-top {
+    position: relative;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -9,6 +10,7 @@
     border-bottom: 1px solid #e5e5e5;
     padding-left: 30px;
     padding-right: 30px;
+    background-color: #fff;
 
     .header-column {
       .stokr-title {
@@ -47,15 +49,14 @@
   }
 
   .header-dropdown {
-    height: 0;
-    padding: 0 30px;
+    margin-top: -200px;
+    padding: 15px 30px;
     overflow: hidden;
     border-bottom: 1px solid#e5e5e5;
-    transition: all 0.25s linear;
+    transition: margin-top 0.3s ease-in-out;
 
     &--expanded {
-      padding: 15px 30px;
-      height: auto;
+      margin-top: initial;
     }
 
     .filter-form {
@@ -112,6 +113,7 @@
           font-weight: bold;
           border-radius: 50%;
           color: #fff;
+          border: none;
         }
       }
     }

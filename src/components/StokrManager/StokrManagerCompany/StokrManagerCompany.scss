@@ -21,10 +21,10 @@
   }
 
   .delete-column {
-    margin-left: -55px;
     justify-content: center;
-    transition: all 0.25s linear;
+    margin-left: -55px;
     opacity: 0;
+    transition: margin-left 0.3s ease-in-out, opacity 0.3s ease-in-out;
 
     &__btn {
       border: none;
@@ -40,7 +40,6 @@
     font-size: 33px;
     font-weight: 300;
     color: #59737c;
-    transition: all 0.25s linear;
 
     &__symbol {
       margin-right: 10px;
