@@ -71,21 +71,46 @@
 
     .suggestions {
       &__item {
+        display: flex;
+        align-items: center;
         height: 55px;
         font-size: 32px;
         font-weight: 300;
 
-        &:hover {
-          cursor: pointer;
+        &:not(:last-child) {
+          margin-bottom: 5px;
         }
 
-        .suggestion-symbol {
-          color: #59737c;
-          margin-right: 20px;
+        .info {
+          display: flex;
+          align-items: center;
+          flex-grow: 1;
+
+          .suggestion-symbol {
+            color: #59737c;
+            margin-right: 20px;
+          }
+
+          .suggestion-name {
+            color: #1c2527;
+          }
         }
 
-        .suggestion-name {
-          color: #1c2527;
+        .actions {
+          display: flex;
+          align-items: center;
+
+          .add-btn {
+            width: 70px;
+            height: 55px;
+            background-color: #41bf15;
+            border-radius: 10px;
+            border: none;
+
+            &:hover {
+              cursor: pointer;
+            }
+          }
         }
       }
     }

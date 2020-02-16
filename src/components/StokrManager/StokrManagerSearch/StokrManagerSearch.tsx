@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { get } from "lodash";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import "./StokrManagerSearch.scss";
 
 type StokrManagerSearch = {
@@ -82,16 +84,25 @@ const StokrManagerSearch: React.FC<StokrManagerSearch> = ({
               <div
                 key={get(suggestion, "1. symbol")}
                 className="suggestions__item"
-                onClick={() =>
-                  handleSuggestionSelect(get(suggestion, "1. symbol"))
-                }
               >
-                <span className="suggestion-symbol">
-                  {get(suggestion, "1. symbol")}
-                </span>
-                <span className="suggestion-name">
-                  ({get(suggestion, "2. name")})
-                </span>
+                <div className="info">
+                  <span className="suggestion-symbol">
+                    {get(suggestion, "1. symbol")}
+                  </span>
+                  <span className="suggestion-name">
+                    ({get(suggestion, "2. name")})
+                  </span>
+                </div>
+                <div className="actions">
+                  <button
+                    className="add-btn"
+                    onClick={() =>
+                      handleSuggestionSelect(get(suggestion, "1. symbol"))
+                    }
+                  >
+                    <FontAwesomeIcon icon={faPlus} size="3x" color="#fff" />
+                  </button>
+                </div>
               </div>
             ))}
           </div>
