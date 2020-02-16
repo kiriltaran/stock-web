@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
-import { get } from "lodash";
+import { get, debounce } from "lodash";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import "./StokrManagerSearch.scss";
@@ -20,11 +20,13 @@ const StokrManagerSearch: React.FC<StokrManagerSearch> = ({
   const handleClose = () => {
     onClose();
     setQuery("");
+    setSuggestions([]);
   };
 
   const handleSuggestionSelect = (symbol: string) => {
     onSuggestionSelect(symbol);
     setQuery("");
+    setSuggestions([]);
   };
 
   const fetchSuggestions = useCallback(async (query: string) => {
@@ -36,7 +38,7 @@ const StokrManagerSearch: React.FC<StokrManagerSearch> = ({
   }, []);
 
   const defineSuggestions = useCallback(
-    async (query: string) => {
+    debounce(async (query: string) => {
       try {
         const response = await fetchSuggestions(query);
 
@@ -48,7 +50,7 @@ const StokrManagerSearch: React.FC<StokrManagerSearch> = ({
       } catch (error) {
         console.log(error);
       }
-    },
+    }, 500),
     [fetchSuggestions]
   );
 
@@ -109,7 +111,9 @@ const StokrManagerSearch: React.FC<StokrManagerSearch> = ({
         ) : (
           <div className="search-body__empty-state">
             <div className="empty-img"></div>
-            <span className="empty-text">Search</span>
+            <span className="empty-text">
+              {query && !suggestions.length ? "Not found" : "Search"}
+            </span>
           </div>
         )}
       </div>
