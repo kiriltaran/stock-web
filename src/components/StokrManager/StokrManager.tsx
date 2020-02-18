@@ -7,10 +7,12 @@ import "./StokrManager.scss";
 
 import { StokrManagerHeader } from "./StokrManagerHeader";
 import { StokrManagerCompany } from "./StokrManagerCompany";
+import { StokrManagerChart } from "./StokrManagerChart";
 import { StokrManagerSearch } from "./StokrManagerSearch";
 
 const StokrManager = () => {
   const [companies, setCompanies] = useState<Company[]>([]);
+  const [chartSymbol, setChartSymbol] = useState<string | null>(null);
   const [isPercentMode, setIsPercentMode] = useState(true);
   const [isBeingEdited, setIsBeingEdited] = useState(false);
   const [isBeingSearched, setIsBeingSearched] = useState(false);
@@ -22,7 +24,7 @@ const StokrManager = () => {
 
   const defineCompanies = useCallback(async () => {
     try {
-      const companies = await fetchCompanies(["WIX"]);
+      const companies = await fetchCompanies(["WIX", "MSFT", "AAPL", "AMZN"]);
 
       setCompanies(companies);
     } catch (error) {
@@ -67,13 +69,17 @@ const StokrManager = () => {
     setIsBeingSearched(false);
   };
 
+  const handlePriceClick = (symbol: string) => {
+    setChartSymbol(symbol);
+  };
+
   const refreshCompanies = async () => {
     try {
       const companiesSymbols = companies.map(company => company.symbol);
 
-      const responseCompanies = await fetchCompanies(companiesSymbols);
+      const newCompanies = await fetchCompanies(companiesSymbols);
 
-      setCompanies(responseCompanies);
+      setCompanies(newCompanies);
     } catch (error) {
       console.log(error);
     }
@@ -103,22 +109,36 @@ const StokrManager = () => {
       <div className="stokr-manager-inner">
         <div className="stokr-manager-main">
           <StokrManagerHeader
+            isVisibleBack={Boolean(chartSymbol)}
             onSearch={() => setIsBeingSearched(true)}
             onRefresh={refreshCompanies}
             onEdit={() => setIsBeingEdited(!isBeingEdited)}
             onFilter={setFilters}
+            onBack={() => {
+              setChartSymbol(null);
+            }}
           />
-          <div className="stokr-manager-body">
-            {getFilteredCompanies().map(company => (
-              <StokrManagerCompany
-                key={company.symbol}
-                company={company}
-                isEditing={isBeingEdited}
-                isPercentageDiff={isPercentMode}
-                onDiffToggle={() => setIsPercentMode(!isPercentMode)}
-                onDelete={() => deleteCompany(company.symbol)}
-              />
-            ))}
+          <div
+            className={classNames("stokr-manager-body", {
+              "stokr-manager-body--charted": chartSymbol
+            })}
+          >
+            <div className="stokr-manager-body__companies">
+              {getFilteredCompanies().map(company => (
+                <StokrManagerCompany
+                  key={company.symbol}
+                  company={company}
+                  isEditing={isBeingEdited}
+                  isPercentageDiff={isPercentMode}
+                  onPriceClick={() => handlePriceClick(company.symbol)}
+                  onDiffToggle={() => setIsPercentMode(!isPercentMode)}
+                  onDelete={() => deleteCompany(company.symbol)}
+                />
+              ))}
+            </div>
+            <div className="stokr-manager-body__chart">
+              {chartSymbol && <StokrManagerChart symbol={chartSymbol} />}
+            </div>
           </div>
         </div>
         <StokrManagerSearch

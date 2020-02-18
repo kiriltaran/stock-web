@@ -47,8 +47,19 @@
   }
 
   .price-column {
-    font-size: 30px;
-    color: #59737c;
+    &__btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      color: #59737c;
+      border: none;
+      background-color: transparent;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
   }
 
   .diff-column {

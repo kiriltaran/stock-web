@@ -9,6 +9,7 @@ type StokrManagerCompanyProps = {
   company: Company;
   isEditing: boolean;
   isPercentageDiff: boolean;
+  onPriceClick: () => void;
   onDelete: () => void;
   onDiffToggle: () => void;
 };
@@ -17,6 +18,7 @@ const StokrManagerCompany: React.FC<StokrManagerCompanyProps> = ({
   company,
   isPercentageDiff,
   isEditing,
+  onPriceClick,
   onDelete,
   onDiffToggle
 }) => {
@@ -34,6 +36,7 @@ const StokrManagerCompany: React.FC<StokrManagerCompanyProps> = ({
     >
       <div className="stokr-manager-company__column delete-column">
         <button
+          type="button"
           aria-label="delete"
           className="delete-column__btn"
           onClick={onDelete}
@@ -46,7 +49,13 @@ const StokrManagerCompany: React.FC<StokrManagerCompanyProps> = ({
         <span className="name-column__name">({company.name})</span>
       </div>
       <div className="stokr-manager-company__column price-column">
-        {company.price}
+        <button
+          type="button"
+          className="price-column__btn"
+          onClick={onPriceClick}
+        >
+          {company.price}
+        </button>
       </div>
       <div className="stokr-manager-company__column diff-column">
         <button type="button" className={diffBtnCls} onClick={onDiffToggle}>

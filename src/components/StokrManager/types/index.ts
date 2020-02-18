@@ -11,3 +11,10 @@ export type Filters = {
   to: string;
   from: string;
 };
+
+export type Series = {
+  name: string;
+  series: {
+    [key: string]: number;
+  };
+};

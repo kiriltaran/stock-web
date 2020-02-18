@@ -5,23 +5,28 @@ import {
   faSearchDollar,
   faRedoAlt,
   faFunnelDollar,
-  faCog
+  faCog,
+  faArrowLeft
 } from "@fortawesome/free-solid-svg-icons";
 import { Filters } from "../types";
 import "./StokrManagerHeader.scss";
 
 type StokrManagerHeaderProps = {
+  isVisibleBack: boolean;
   onSearch: () => void;
   onRefresh: () => void;
   onEdit: () => void;
   onFilter: (filters: Filters) => void;
+  onBack: () => void;
 };
 
 const StokrManagerHeader: React.FC<StokrManagerHeaderProps> = ({
+  isVisibleBack,
   onSearch,
   onRefresh,
   onEdit,
-  onFilter
+  onFilter,
+  onBack
 }) => {
   const [isFilterShown, setIsFilterShown] = useState(false);
   const [nameFilter, setNameFilter] = useState("");
@@ -43,7 +48,11 @@ const StokrManagerHeader: React.FC<StokrManagerHeaderProps> = ({
           <h1 className="stokr-title">Stokr</h1>
         </div>
         <div className="header-column">
-          <div className="actions">
+          <div
+            className={classNames("actions", {
+              "actions--back": isVisibleBack
+            })}
+          >
             <button
               aria-label="search"
               className="actions__icon"
@@ -71,6 +80,13 @@ const StokrManagerHeader: React.FC<StokrManagerHeaderProps> = ({
               onClick={() => onEdit()}
             >
               <FontAwesomeIcon icon={faCog} size="3x" />
+            </button>
+            <button
+              aria-label="back"
+              className="actions__icon back-icon"
+              onClick={() => onBack()}
+            >
+              <FontAwesomeIcon icon={faArrowLeft} size="3x" />
             </button>
           </div>
         </div>

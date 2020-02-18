@@ -1,5 +1,6 @@
 .stokr-manager-header {
   min-height: 128px;
+  flex-shrink: 0;
 
   .header-top {
     position: relative;
@@ -22,6 +23,18 @@
       .actions {
         display: flex;
         align-items: center;
+        overflow: hidden;
+
+        &--back {
+          .actions__icon {
+            opacity: 0 !important;
+          }
+
+          .back-icon {
+            opacity: 1 !important;
+            margin-right: 0 !important;
+          }
+        }
 
         &__search {
           height: 40px;
@@ -35,6 +48,7 @@
           height: 40px;
           border: none;
           padding: 0;
+          transition: opacity 0.3s ease-in-out, margin-right 0.3s ease-in-out;
 
           &:hover {
             cursor: pointer;
@@ -43,6 +57,11 @@
           &:not(:last-child) {
             margin-right: 20px;
           }
+        }
+
+        .back-icon {
+          opacity: 0;
+          margin-right: -60px;
         }
       }
     }
