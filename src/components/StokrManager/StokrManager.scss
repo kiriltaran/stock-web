@@ -17,6 +17,19 @@
       flex-direction: column;
       height: 50%;
 
+      .stokr-manager-header-wrapper {
+        position: relative;
+      }
+
+      .stokr-manager-filter-wrapper {
+        margin-top: -166px;
+        transition: margin-top 0.3s ease-in-out;
+
+        &--slided {
+          margin-top: 0;
+        }
+      }
+
       .stokr-manager-body {
         overflow: auto;
         display: flex;

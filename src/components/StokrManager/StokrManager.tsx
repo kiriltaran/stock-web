@@ -6,6 +6,7 @@ import { Filters, Company } from "./types";
 import "./StokrManager.scss";
 
 import { StokrManagerHeader } from "./StokrManagerHeader";
+import { StokrManagerFilter } from "./StokrManagerFilter";
 import { StokrManagerCompany } from "./StokrManagerCompany";
 import { StokrManagerChart } from "./StokrManagerChart";
 import { StokrManagerSearch } from "./StokrManagerSearch";
@@ -14,6 +15,7 @@ const StokrManager = () => {
   const [companies, setCompanies] = useState<Company[]>([]);
   const [chartSymbol, setChartSymbol] = useState<string | null>(null);
   const [isPercentMode, setIsPercentMode] = useState(true);
+  const [isBeingFiltered, setIsBeingFiltered] = useState(false);
   const [isBeingEdited, setIsBeingEdited] = useState(false);
   const [isBeingSearched, setIsBeingSearched] = useState(false);
   const [filters, setFilters] = useState<Filters>({
@@ -108,16 +110,27 @@ const StokrManager = () => {
     >
       <div className="stokr-manager-inner">
         <div className="stokr-manager-main">
-          <StokrManagerHeader
-            isVisibleBack={Boolean(chartSymbol)}
-            onSearch={() => setIsBeingSearched(true)}
-            onRefresh={refreshCompanies}
-            onEdit={() => setIsBeingEdited(!isBeingEdited)}
-            onFilter={setFilters}
-            onBack={() => {
-              setChartSymbol(null);
-            }}
-          />
+          <div className="stokr-manager-header-wrapper">
+            <StokrManagerHeader
+              isBackState={Boolean(chartSymbol)}
+              onSearch={() => setIsBeingSearched(true)}
+              onRefresh={refreshCompanies}
+              onEdit={() => setIsBeingEdited(!isBeingEdited)}
+              onFilter={() => {
+                setIsBeingFiltered(!isBeingFiltered);
+              }}
+              onBack={() => {
+                setChartSymbol(null);
+              }}
+            />
+          </div>
+          <div
+            className={classNames("stokr-manager-filter-wrapper", {
+              "stokr-manager-filter-wrapper--slided": isBeingFiltered
+            })}
+          >
+            <StokrManagerFilter onFilter={setFilters} />
+          </div>
           <div
             className={classNames("stokr-manager-body", {
               "stokr-manager-body--charted": chartSymbol
