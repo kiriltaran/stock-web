@@ -1,16 +1,17 @@
 import React, { useState, useCallback, useEffect } from "react";
 import axios from "axios";
+import { useLocation } from "react-router-dom";
 import { Line } from "react-chartjs-2";
-import { Series } from "../types";
+import { Series } from "../../../types";
 import { MONTH_NAMES } from "./constants";
+
 import "./StokrManagerChart.scss";
 
-type StokrManagerChartProps = {
-  symbol: string;
-};
+const useQuery = () => new URLSearchParams(useLocation().search);
 
-const StokrManagerChart: React.FC<StokrManagerChartProps> = ({ symbol }) => {
-  const [series, setSeries] = useState<Series | null>(null);
+const StokrManagerChart = () => {
+  const query = useQuery();
+  const [series, setSeries] = useState<Series>({});
 
   const fetchSeries = async (symbol: string, period: string) => {
     const { data } = await axios.get(
@@ -22,17 +23,24 @@ const StokrManagerChart: React.FC<StokrManagerChartProps> = ({ symbol }) => {
 
   const defineSeries = useCallback(async () => {
     try {
+      const symbol = query.get("symbol");
+
+      if (!symbol) {
+        throw new Error("No company symbol");
+      }
+
       const series = await fetchSeries(symbol, "month");
 
       setSeries(series);
     } catch (error) {
       console.log(error);
     }
-  }, [symbol]);
+  }, [query]);
 
   useEffect(() => {
     defineSeries();
-  }, [defineSeries, symbol]);
+    // eslint-disable-next-line
+  }, []);
 
   const chartData = {
     labels: [
@@ -77,7 +85,7 @@ const StokrManagerChart: React.FC<StokrManagerChartProps> = ({ symbol }) => {
   };
 
   return (
-    <div className="company-chart">
+    <div className="stokr-manager-chart">
       <Line data={chartData} options={chartOptions} />
     </div>
   );

@@ -1,32 +1,27 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { useDispatch } from "react-redux";
+import { useHistory } from "react-router";
 import axios from "axios";
 import { get, debounce } from "lodash";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { companiesThunks } from "../../../store";
+
 import "./StokrManagerSearch.scss";
 
-type StokrManagerSearch = {
-  onSuggestionSelect: (symbol: string) => void;
-  onClose: () => void;
-};
-
-const StokrManagerSearch: React.FC<StokrManagerSearch> = ({
-  onSuggestionSelect,
-  onClose
-}) => {
+const StokrManagerSearch = () => {
+  const history = useHistory();
+  const dispatch = useDispatch();
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState<object[]>([]);
 
   const handleClose = () => {
-    onClose();
-    setQuery("");
-    setSuggestions([]);
+    history.push("/");
   };
 
-  const handleSuggestionSelect = (symbol: string) => {
-    onSuggestionSelect(symbol);
-    setQuery("");
-    setSuggestions([]);
+  const handleSuggestionSelect = async (symbol: string) => {
+    await dispatch(companiesThunks.addCompany(symbol));
+    history.push("/");
   };
 
   const fetchSuggestions = useCallback(async (query: string) => {

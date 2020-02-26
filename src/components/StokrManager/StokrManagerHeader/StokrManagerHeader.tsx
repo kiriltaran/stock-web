@@ -1,4 +1,6 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory, useRouteMatch } from "react-router-dom";
 import classNames from "classnames";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -8,25 +10,53 @@ import {
   faCog,
   faArrowLeft
 } from "@fortawesome/free-solid-svg-icons";
+import {
+  globalActions,
+  globalSelectors,
+  companiesThunks,
+  companiesSelectors
+} from "../../../store";
+
 import "./StokrManagerHeader.scss";
 
-type StokrManagerHeaderProps = {
-  isBackState: boolean;
-  onSearch: () => void;
-  onRefresh: () => void;
-  onFilter: () => void;
-  onEdit: () => void;
-  onBack: () => void;
-};
+const headerBackStateRoutes = ["/chart"];
 
-const StokrManagerHeader: React.FC<StokrManagerHeaderProps> = ({
-  isBackState,
-  onSearch,
-  onRefresh,
-  onFilter,
-  onEdit,
-  onBack
-}) => {
+const StokrManagerHeader = () => {
+  const history = useHistory();
+  const dispatch = useDispatch();
+  const isBackState = useRouteMatch(headerBackStateRoutes);
+  const companiesList = useSelector(companiesSelectors.list);
+  const isFiltering = useSelector(globalSelectors.isFiltering);
+  const isEditing = useSelector(globalSelectors.isEditing);
+
+  const handleFilterIconClick = () => {
+    const toggleFilteringAction = isFiltering
+      ? globalActions.filteringFinish
+      : globalActions.filteringStart;
+    dispatch(toggleFilteringAction());
+  };
+
+  const handleEditIconClick = () => {
+    const toggleEditingAction = isEditing
+      ? globalActions.editingFinish
+      : globalActions.editingStart;
+    dispatch(toggleEditingAction());
+  };
+
+  const handleRefreshIconClick = () => {
+    const symbols = companiesList.map(company => company.symbol);
+
+    dispatch(companiesThunks.fetchCompanies(symbols));
+  };
+
+  const handleSearchIconClick = () => {
+    history.push("/search");
+  };
+
+  const handleBackIconClick = () => {
+    history.push("/");
+  };
+
   return (
     <div className="stokr-manager-header">
       <div className="header-column">
@@ -41,35 +71,35 @@ const StokrManagerHeader: React.FC<StokrManagerHeaderProps> = ({
           <button
             aria-label="search"
             className="actions__icon"
-            onClick={() => onSearch()}
+            onClick={handleSearchIconClick}
           >
             <FontAwesomeIcon icon={faSearchDollar} size="3x" />
           </button>
           <button
             aria-label="refresh"
             className="actions__icon"
-            onClick={() => onRefresh()}
+            onClick={handleRefreshIconClick}
           >
             <FontAwesomeIcon icon={faRedoAlt} size="3x" />
           </button>
           <button
             aria-label="filter"
             className="actions__icon"
-            onClick={() => onFilter()}
+            onClick={handleFilterIconClick}
           >
             <FontAwesomeIcon icon={faFunnelDollar} size="3x" />
           </button>
           <button
             aria-label="settings"
             className="actions__icon"
-            onClick={() => onEdit()}
+            onClick={handleEditIconClick}
           >
             <FontAwesomeIcon icon={faCog} size="3x" />
           </button>
           <button
             aria-label="back"
             className="actions__icon back-icon"
-            onClick={() => onBack()}
+            onClick={handleBackIconClick}
           >
             <FontAwesomeIcon icon={faArrowLeft} size="3x" />
           </button>

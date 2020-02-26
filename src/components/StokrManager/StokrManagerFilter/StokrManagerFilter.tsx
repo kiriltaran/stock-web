@@ -1,24 +1,23 @@
 import React, { useState } from "react";
-import { Filters } from "../types";
+import { useDispatch } from "react-redux";
+import { companiesActions } from "../../../store";
+
 import "./StokrManagerFilter.scss";
 
-type StokrManagerFilterProps = {
-  onFilter: (filters: Filters) => void;
-};
-
-const StokrManagerFilter: React.FC<StokrManagerFilterProps> = ({
-  onFilter
-}) => {
+const StokrManagerFilter = () => {
+  const dispatch = useDispatch();
   const [name, setName] = useState("");
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
 
   const handleApplyClick = () => {
-    onFilter({
-      name,
-      to,
-      from
-    });
+    dispatch(
+      companiesActions.filterCompanies({
+        name,
+        from: from === "" ? 0 : Number(from),
+        to: to === "" ? Infinity : Number(to)
+      })
+    );
   };
 
   return (

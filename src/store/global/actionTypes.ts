@@ -1,0 +1,10 @@
+const PREFIX = "global";
+
+const actionTypes = {
+  EDITING_START: `${PREFIX}/EDITING_START`,
+  EDITING_FINISH: `${PREFIX}/EDITING_FINISH`,
+  FILTERING_START: `${PREFIX}/FILTERING_START`,
+  FILTERING_FINISH: `${PREFIX}/FILTERING_FINISH`
+};
+
+export { actionTypes };

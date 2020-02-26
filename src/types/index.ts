@@ -8,13 +8,10 @@ export type Company = {
 
 export type Filters = {
   name: string;
-  to: string;
-  from: string;
+  to: number;
+  from: number;
 };
 
 export type Series = {
-  name: string;
-  series: {
-    [key: string]: number;
-  };
+  [key: string]: number;
 };
